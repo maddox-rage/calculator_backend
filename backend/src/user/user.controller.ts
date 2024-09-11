@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Patch,
   Post,
@@ -17,6 +18,10 @@ import { JwtAuthGuard } from 'src/guards/jwtAuth.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get(':id')
+  async getUserById(@Param('id') id: number): Promise<User> {
+    return this.userService.getUserById(Number(id));
+  }
   @Post('/signup')
   async signUp(@Body() userData: SignUpDto): Promise<AuthResponseDto> {
     return this.userService.signUp(userData);

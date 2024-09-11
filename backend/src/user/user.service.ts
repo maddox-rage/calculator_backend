@@ -13,6 +13,15 @@ export class UserService {
     private readonly authService: AuthService,
   ) {}
 
+  async getUserById(id: number): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    return user;
+  }
+
   async signUp(dto: SignUpDto): Promise<{ user: User; token: string }> {
     const existingUserWithThisLogin = await this.prisma.user.findUnique({
       where: {
