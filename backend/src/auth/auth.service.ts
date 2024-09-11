@@ -13,6 +13,7 @@ export class AuthService {
       sub: user.id,
       isAdmin: user.isAdmin,
       login: user.login,
+      isConfirmed: user.isConfirmed,
     };
     return { token: this.jwtService.sign(payload) };
   }

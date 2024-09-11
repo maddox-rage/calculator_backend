@@ -3,6 +3,7 @@ export interface DecodedToken {
   login: string;
   sub: number;
   isAdmin: boolean;
+  isConfirmed: boolean;
   iat: number;
   exp: number;
 }
