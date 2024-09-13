@@ -38,7 +38,13 @@ model CalculationResult {
   id            Int      @id @default(autoincrement())
   userId        Int
   calculatorId  Int
-  resultValue   String   
+  resultValue   String
+  value3 String
+  value2 String
+  value1 String
+  uncertaintyBType     String
+  uncertaintyTotal     String
+  uncertaintyExpanded  String 
   createdAt     DateTime @default(now()) 
   
   user          User     @relation("UserResults", fields: [userId], references: [id])

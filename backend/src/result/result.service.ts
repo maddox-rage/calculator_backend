@@ -41,6 +41,12 @@ export class ResultService {
     await this.prisma.calculationResult.create({
       data: {
         resultValue: dto.resultValue,
+        value3: dto.value3,
+        value2: dto.value2,
+        value1: dto.value1,
+        uncertaintyBType: dto.uncertaintyBType,
+        uncertaintyTotal: dto.uncertaintyTotal,
+        uncertaintyExpanded: dto.uncertaintyExpanded,
         calculator: {
           connect: {
             id: dto.calculatorId,
