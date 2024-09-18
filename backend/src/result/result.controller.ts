@@ -23,7 +23,7 @@ export class ResultController {
   ): Promise<{ message }> {
     return this.resultService.writeResult(Number(userId), resultData);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get(':calculatorId')
   async getCalculationResultByUserIdAndCalculatorId(
     @Param('userId') userId: number,

@@ -73,4 +73,16 @@ export class ResultService {
     });
     return results;
   }
+  async getExcelCalculationResult(
+    userId: number,
+    calculatorId: number,
+  ): Promise<CalculationResult[]> {
+    const results = await this.prisma.calculationResult.findMany({
+      where: {
+        userId: userId,
+        calculatorId: calculatorId,
+      },
+    });
+    return results;
+  }
 }
