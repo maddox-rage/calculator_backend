@@ -56,8 +56,11 @@ export class UserService {
     });
     if (!curretUser) {
       throw new HttpException(
-        'User with this login not found',
-        HttpStatus.BAD_REQUEST,
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'User with this login not found',
+        },
+        HttpStatus.NOT_FOUND,
       );
     }
     const isMatch = await bcrypt.compare(dto.password, curretUser.password);
