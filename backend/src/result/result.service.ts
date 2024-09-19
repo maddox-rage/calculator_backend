@@ -91,30 +91,44 @@ export class ResultService {
     const worksheet = workbook.addWorksheet('Calculation Results');
 
     worksheet.columns = [
-      { header: 'ID', key: 'id', width: 10 },
+      { header: 'Дата', key: 'date', width: 15 },
       { header: 'Результат', key: 'resultValue', width: 15 },
       { header: 'Разрядность', key: 'value1', width: 15 },
       { header: 'Результат измерений X', key: 'value2', width: 15 },
-      { header: 'Абсолютная погрешность [Δ]', key: 'value3', width: 15 },
+      { header: 'Абсолютная погрешность [Δ]', key: 'value3', width: 20 },
       {
         header: 'Неопределённость по типу В',
         key: 'uncertaintyBType',
-        width: 20,
+        width: 25,
       },
       {
         header: 'Суммарная неопределённость',
         key: 'uncertaintyTotal',
-        width: 20,
+        width: 25,
       },
       {
         header: 'Расширенная неопределённость',
         key: 'uncertaintyExpanded',
-        width: 20,
+        width: 25,
       },
     ];
 
+    // Заполнение данными
     results.forEach((result) => {
-      worksheet.addRow(result);
+      worksheet.addRow({
+        date: result.createdAt.toLocaleDateString('ru-RU', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }),
+        resultValue: result.resultValue,
+        value1: result.value1,
+        value2: result.value2,
+        value3: result.value3,
+        uncertaintyBType: result.uncertaintyBType,
+        uncertaintyTotal: result.uncertaintyTotal,
+        uncertaintyExpanded: result.uncertaintyExpanded,
+      });
     });
 
     res.setHeader(
