@@ -43,7 +43,7 @@ export class ResultController {
       Number(calculatorId),
     );
   }
-  @Get(':userId/:calculatorId/excel')
+  @Get('/:calculatorId/excel')
   async getExcelResult(
     @Param('userId') userId: number,
     @Param('calculatorId') calculatorId: number,
