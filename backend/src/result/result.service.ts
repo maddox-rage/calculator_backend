@@ -3,6 +3,8 @@ import { CalculationResult } from '@prisma/client';
 import { AuthService } from 'src/auth/auth.service';
 import { PrismaService } from 'src/prisma.service';
 import { writeResult } from './result.dto';
+import { Response } from 'express';
+import * as ExcelJS from 'exceljs';
 
 @Injectable()
 export class ResultService {
@@ -76,13 +78,55 @@ export class ResultService {
   async getExcelCalculationResult(
     userId: number,
     calculatorId: number,
-  ): Promise<CalculationResult[]> {
+    res: Response,
+  ): Promise<void> {
     const results = await this.prisma.calculationResult.findMany({
       where: {
         userId: userId,
         calculatorId: calculatorId,
       },
     });
-    return results;
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Calculation Results');
+
+    worksheet.columns = [
+      { header: 'ID', key: 'id', width: 10 },
+      { header: 'Результат', key: 'resultValue', width: 15 },
+      { header: 'Разрядность', key: 'value1', width: 15 },
+      { header: 'Результат измерений X', key: 'value2', width: 15 },
+      { header: 'Абсолютная погрешность [Δ]', key: 'value3', width: 15 },
+      {
+        header: 'Неопределённость по типу В',
+        key: 'uncertaintyBType',
+        width: 20,
+      },
+      {
+        header: 'Суммарная неопределённость',
+        key: 'uncertaintyTotal',
+        width: 20,
+      },
+      {
+        header: 'Расширенная неопределённость',
+        key: 'uncertaintyExpanded',
+        width: 20,
+      },
+    ];
+
+    results.forEach((result) => {
+      worksheet.addRow(result);
+    });
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename=' + 'calculation_results.xlsx',
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
   }
 }

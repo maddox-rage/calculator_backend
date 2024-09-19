@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ResultService } from './result.service';
 import { CalculationResult } from '@prisma/client';
 import { JwtAuthGuard } from 'src/guards/jwtAuth.guard';
 import { writeResult } from './result.dto';
+import { Response } from 'express';
 
 @Controller('user/:userId/result/')
 export class ResultController {
@@ -32,6 +41,18 @@ export class ResultController {
     return this.resultService.getCalculationResultByUserIdAndCalculatorId(
       Number(userId),
       Number(calculatorId),
+    );
+  }
+  @Get(':userId/:calculatorId/excel')
+  async getExcelResult(
+    @Param('userId') userId: number,
+    @Param('calculatorId') calculatorId: number,
+    @Res() res: Response,
+  ): Promise<void> {
+    await this.resultService.getExcelCalculationResult(
+      userId,
+      calculatorId,
+      res,
     );
   }
 }
