@@ -50,8 +50,8 @@ export class ResultController {
     @Res() res: Response,
   ): Promise<void> {
     await this.resultService.getExcelCalculationResult(
-      userId,
-      calculatorId,
+      Number(userId),
+      Number(calculatorId),
       res,
     );
   }
