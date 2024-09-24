@@ -12,6 +12,7 @@ import { CalculationResult } from '@prisma/client';
 import { JwtAuthGuard } from 'src/guards/jwtAuth.guard';
 import { writeResult } from './result.dto';
 import { Response } from 'express';
+import { GetResultsDto } from './dto/getResultsById.dto';
 
 @Controller('user/:userId/result/')
 export class ResultController {
@@ -59,7 +60,7 @@ export class ResultController {
   async getExcelResultByIDs(
     @Param('calculatorId') calculatorId: number,
     @Res() res: Response,
-    @Body() resultIds: number[],
+    @Body() resultIds: GetResultsDto,
   ): Promise<void> {
     await this.resultService.getExcelCalculationResultByResultId(
       resultIds,

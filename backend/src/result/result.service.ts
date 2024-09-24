@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 import { writeResult } from './result.dto';
 import { Response } from 'express';
 import * as ExcelJS from 'exceljs';
+import { GetResultsDto } from './dto/getResultsById.dto';
 
 @Injectable()
 export class ResultService {
@@ -201,14 +202,14 @@ export class ResultService {
     }
   }
   async getExcelCalculationResultByResultId(
-    resultIds: number[],
+    resultIds: GetResultsDto,
     calculatorId: number,
     res: Response,
   ): Promise<void> {
     const results = await this.prisma.calculationResult.findMany({
       where: {
         id: {
-          in: resultIds,
+          in: resultIds.resultIds,
         },
         calculatorId: calculatorId,
       },
