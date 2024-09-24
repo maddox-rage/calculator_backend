@@ -55,4 +55,16 @@ export class ResultController {
       res,
     );
   }
+  @Get('/:calculatorId/excel/byId')
+  async getExcelResultByIDs(
+    @Param('calculatorId') calculatorId: number,
+    @Res() res: Response,
+    @Body() resultIds: number[],
+  ): Promise<void> {
+    await this.resultService.getExcelCalculationResultByResultId(
+      resultIds,
+      calculatorId,
+      res,
+    );
+  }
 }

@@ -200,4 +200,129 @@ export class ResultService {
       res.end();
     }
   }
+  async getExcelCalculationResultByResultId(
+    resultIds: number[],
+    calculatorId: Number,
+    res: Response,
+  ): Promise<void> {
+    const results = await this.prisma.calculationResult.findMany({
+      where: {
+        id: {
+          in: resultIds,
+        },
+      },
+    });
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Calculation Results');
+
+    if (calculatorId == 1) {
+      worksheet.columns = [
+        { header: 'Дата', key: 'date', width: 15 },
+        { header: 'Результат', key: 'resultValue', width: 15 },
+        { header: 'Разрядность', key: 'value1', width: 15 },
+        { header: 'Результат измерений X', key: 'value2', width: 15 },
+        { header: 'Абсолютная погрешность [Δ]±', key: 'value3', width: 20 },
+        {
+          header: ' Неопределённость по типу В(Ub∆)',
+          key: 'uncertaintyBType',
+          width: 25,
+        },
+        {
+          header: ' Суммарная неопределённость(Uc)',
+          key: 'uncertaintyTotal',
+          width: 25,
+        },
+        {
+          header: 'Расширенная неопределённость(I)',
+          key: 'uncertaintyExpanded',
+          width: 25,
+        },
+      ];
+
+      results.forEach((result) => {
+        worksheet.addRow({
+          date: result.createdAt.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          }),
+          resultValue: result.resultValue,
+          value1: result.value1,
+          value2: result.value2,
+          value3: result.value3,
+          uncertaintyBType: result.uncertaintyBType,
+          uncertaintyTotal: result.uncertaintyTotal,
+          uncertaintyExpanded: result.uncertaintyExpanded,
+        });
+      });
+
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename=' + 'calculation_results.xlsx',
+      );
+
+      await workbook.xlsx.write(res);
+      res.end();
+    } else {
+      worksheet.columns = [
+        { header: 'Дата', key: 'date', width: 15 },
+        { header: 'Результат', key: 'resultValue', width: 15 },
+        { header: 'Разрядность', key: 'value1', width: 15 },
+        { header: 'Результат измерений X', key: 'value2', width: 15 },
+        {
+          header: 'Относительная погрешность [δ], %',
+          key: 'value3',
+          width: 20,
+        },
+        {
+          header: 'Неопределённость по типу В(Ubδ)',
+          key: 'uncertaintyBType',
+          width: 25,
+        },
+        {
+          header: 'Суммарная неопределённость(Uc)',
+          key: 'uncertaintyTotal',
+          width: 25,
+        },
+        {
+          header: 'Расширенная неопределённость(U)',
+          key: 'uncertaintyExpanded',
+          width: 25,
+        },
+      ];
+
+      results.forEach((result) => {
+        worksheet.addRow({
+          date: result.createdAt.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          }),
+          resultValue: result.resultValue,
+          value1: result.value1,
+          value2: result.value2,
+          value3: result.value3,
+          uncertaintyBType: result.uncertaintyBType,
+          uncertaintyTotal: result.uncertaintyTotal,
+          uncertaintyExpanded: result.uncertaintyExpanded,
+        });
+      });
+
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename=' + 'calculation_results.xlsx',
+      );
+
+      await workbook.xlsx.write(res);
+      res.end();
+    }
+  }
 }
