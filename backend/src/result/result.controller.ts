@@ -63,7 +63,7 @@ export class ResultController {
   ): Promise<void> {
     await this.resultService.getExcelCalculationResultByResultId(
       resultIds,
-      calculatorId,
+      Number(calculatorId),
       res,
     );
   }
