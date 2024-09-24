@@ -202,7 +202,7 @@ export class ResultService {
   }
   async getExcelCalculationResultByResultId(
     resultIds: number[],
-    calculatorId: Number,
+    calculatorId: number,
     res: Response,
   ): Promise<void> {
     const results = await this.prisma.calculationResult.findMany({
@@ -210,6 +210,7 @@ export class ResultService {
         id: {
           in: resultIds,
         },
+        calculatorId: calculatorId,
       },
     });
     const workbook = new ExcelJS.Workbook();
